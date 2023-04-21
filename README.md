@@ -24,8 +24,7 @@
 - [1. About the Project](#1-about-the-project)
   - [1.1. Features](#11-features)
 - [2. Getting Started](#2-getting-started)
-  - [2.1. Prerequisites](#21-prerequisites)
-  - [2.2. Installation](#22-installation)
+  - [2.1. Installation](#21-installation)
 - [3. Usage](#3-usage)
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
@@ -45,11 +44,8 @@
 <!-- Getting Started -->
 ## 2. Getting Started
 
-<!-- Prerequisites -->
-### 2.1. Prerequisites
-
 <!-- Installation -->
-### 2.2. Installation
+### 2.1. Installation
 
 Install my-project with flit
 
@@ -69,29 +65,35 @@ pip install ak_selenium
 <!-- Usage -->
 ## 3. Usage
 
-Use this space to tell a little more about your project and how it can be used. Show additional screenshots, code samples, demos or link to other resources.
-
 ```python
-$ from ak_selenium import Chrome
-$ cache_file = Cache(r'Path\to\Cache\file.pkl')
-$ cache_file.write('This is a text')
-$ cache_file.read()
-'This is a text'
+from ak_selenium import Chrome
+chrome = Chrome(
+    headless=False, 
+    Chrome_userdata_path=r"Path\to\User Data",
+    half_screen=True,
+)
+
+#Get Chromedriver
+driver = chrome.init_chrome()
+
+#Get the website
+driver.get("https://example.com")
+
+By, Keys = chrome.get_By_and_Keys()
+
+#Wait for elements to load
+locator = (By.TAG_NAME, "h1")
+chrome.Wait_for_locator(locator)
+
+#Get Requests Session
+s = chrome.update_req_headers_cookies()
+s.get('https://www.iana.org/domains/reserved')
 ```
 
-Encrypt your pickle file as below
-
-```python
-$ cache_file = Cache(r'Path\to\Cache\encr_file.pkl', password="Strong_Password")
-
-$ cache_file.write('This is an encrypted text')
-$ cache_file.read()
-'This is an encrypted text'
-```
 <!-- Roadmap -->
 ## 4. Roadmap
 
-- [x] Add encryption option to the cache file
+- [ ]
 
 <!-- License -->
 ## 5. License
