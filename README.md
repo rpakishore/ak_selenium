@@ -5,8 +5,6 @@
     Selenium package with requests integration and anti-bot detection measures
   </p>
 <h4>
-    <a href="https://github.com/rpakishore/ak_selenium/">View Demo</a>
-  <span> · </span>
     <a href="https://github.com/rpakishore/ak_selenium">Documentation</a>
   <span> · </span>
     <a href="https://github.com/rpakishore/ak_selenium/issues/">Report Bug</a>
@@ -89,44 +87,11 @@ Install with flit
 <!-- Usage -->
 ## 3. Usage
 
-```python
-from ak_selenium import Chrome
-chrome = Chrome(
-    headless=False,   # Start Chrome in headless mode
-    Chrome_userdata_path=r"Path\to\User Data",  # Path to `User Data` folder, Defaults to correct location in windows
-    half_screen=True,   # Set the browser resolution to half the screen size (only applicable if NOT `headless`)
-)
-
-#Get Chromedriver
-driver = chrome.init_chrome()
-
-#Navigate to website
-driver.get("https://example.com")
-
-By, Keys = chrome.get_By_and_Keys()
-
-#Wait for elements to load
-locator = (By.TAG_NAME, "h1")
-chrome.Wait_for_locator(locator)
-
-#Get Requests Session
-s = chrome.update_req_headers_cookies()
-s.get('https://www.iana.org/domains/reserved')
-```
+![Usage](assets/usage.png)
 
 ### Additional Options
-Default chrome useragent can be overridden using the `USERAGENT` attribute
 
-```python
-chrome.USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'
-```
-
-Implicit and Max wait times for the selenium requests can be changed using the `IMPLICITLY_WAIT_TIME` and `MAX_WAIT_TIME` attribute. Defaults to 3s & 5s respectively
-
-```python
-chrome.IMPLICITLY_WAIT_TIME = 3   #seconds
-chrome.MAX_WAIT_TIME = 5          #seconds
-```
+![Additional Options](assets/Addl_Options.png)
 <!-- Roadmap -->
 ## 4. Roadmap
 
