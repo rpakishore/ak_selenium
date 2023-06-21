@@ -28,11 +28,11 @@ def test_chrome_user_agent(chrome_instance):
 
 
 def test_half_screen(chrome_instance):
-    assert chrome_instance.half_screen == True
+    assert chrome_instance.half_screen is True
 
 
 def test_Chrome_userdata_path(chrome_instance):
-    assert chrome_instance.Chrome_userdata_path == None
+    assert chrome_instance.Chrome_userdata_path is None
 
 
 def test_str_method(chrome_instance):
