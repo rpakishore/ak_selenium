@@ -167,4 +167,8 @@ def _ram_optimization_browser_options(options: Options) -> Options:
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--lang=en-US")
+    
+    # Based on https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or
+    options.add_argument("--allow-running-insecure-content")
+    options.add_argument("--disable-web-security")
     return options
