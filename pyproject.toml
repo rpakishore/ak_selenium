@@ -5,6 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "ak_selenium"
 authors = [{name = "Arun Kishore", email = "pypi@rpakishore.co.in"}]
+readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
