@@ -9,6 +9,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 
+from selenium.webdriver.remote.webelement import WebElement
+
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 from pathlib import Path
@@ -149,7 +152,17 @@ class Chrome:
         return s
     
     @staticmethod
-    def find_element_by_text(elements, text):
+    def find_element_by_text(elements:list[WebElement], text: str) -> WebElement:
+        """
+        Finds a WebElement from a list based on its text content.
+
+        Args:
+            elements (List[WebElement]): The list of WebElements to search through.
+            text (str): The text to match against the elements' text content.
+
+        Returns:
+            WebElement or None: The first WebElement that matches the provided text, or None if no match is found.
+        """
         for element in elements:
             if element.text.strip() == text:
                 return element
