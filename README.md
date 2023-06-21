@@ -29,6 +29,7 @@
     - [2.3.1. Production](#231-production)
     - [2.3.2. Development](#232-development)
 - [3. Usage](#3-usage)
+  - [Additional Options](#additional-options)
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
 - [6. Contact](#6-contact)
@@ -99,7 +100,7 @@ chrome = Chrome(
 #Get Chromedriver
 driver = chrome.init_chrome()
 
-#Get the website
+#Navigate to website
 driver.get("https://example.com")
 
 By, Keys = chrome.get_By_and_Keys()
@@ -113,6 +114,19 @@ s = chrome.update_req_headers_cookies()
 s.get('https://www.iana.org/domains/reserved')
 ```
 
+### Additional Options
+Default chrome useragent can be overridden using the `USERAGENT` attribute
+
+```python
+chrome.USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'
+```
+
+Implicit and Max wait times for the selenium requests can be changed using the `IMPLICITLY_WAIT_TIME` and `MAX_WAIT_TIME` attribute. Defaults to 3s & 5s respectively
+
+```python
+chrome.IMPLICITLY_WAIT_TIME = 3   #seconds
+chrome.MAX_WAIT_TIME = 5          #seconds
+```
 <!-- Roadmap -->
 ## 4. Roadmap
 
