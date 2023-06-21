@@ -11,6 +11,9 @@ from selenium.webdriver.chrome.options import Options
 
 from webdriver_manager.chrome import ChromeDriverManager
 
+from pathlib import Path
+import sys
+
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                 AppleWebKit/537.36 (KHTML, like Gecko) \
@@ -23,12 +26,25 @@ class Chrome:
             Chrome_userdata_path:str=None, 
             half_screen:bool=True):
         self.headless = headless
+        
+        if not Chrome_userdata_path and sys.platform=="win32":
+            Chrome_userdata_path = Path.home() / 'AppData' / 'Local' / 'Google' / 'Chrome' / 'User Data'
+            if not Chrome_userdata_path.exists():
+                Chrome_userdata_path = None
+            else:
+                Chrome_userdata_path = str(Chrome_userdata_path)
         self.Chrome_userdata_path = Chrome_userdata_path
         self.half_screen = half_screen
         self.s = None
         return None
 
-    def init_chrome(self):
+    def init_chrome(self) -> webdriver.Chrome:
+        """
+        Initializes a Chrome web driver with specific options and configurations.
+        
+        Returns:
+            webdriver.Chrome: The initialized Chrome driver object.
+        """
         options = webdriver.ChromeOptions()
         options.add_argument('--disable-gpu')
         if self.headless:

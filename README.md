@@ -24,7 +24,10 @@
 - [1. About the Project](#1-about-the-project)
   - [1.1. Features](#11-features)
 - [2. Getting Started](#2-getting-started)
-  - [2.1. Installation](#21-installation)
+  - [2.1. Dependencies](#21-dependencies)
+  - [2.3. Installation](#23-installation)
+    - [2.3.1. Production](#231-production)
+    - [2.3.2. Development](#232-development)
 - [3. Usage](#3-usage)
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
@@ -37,29 +40,49 @@
 <!-- Features -->
 ### 1.1. Features
 
-- launch Selenium with custom options
+- Launch Selenium with custom options
+- Automatically try to add Chrome UserData
 - Add anti-bot detection measures
 - Pass selenium headers/cookies to requests library
 
 <!-- Getting Started -->
 ## 2. Getting Started
 
-<!-- Installation -->
-### 2.1. Installation
+### 2.1. Dependencies
 
-Install my-project with flit
+Create the virutual environment and install dependencies
 
 ```bash
-git clone https://github.com/rpakishore/ak_selenium.git
-cd ak_selenium
+python -m venv .venv
+
+.venv\Scripts\activate.bat
+
 pip install flit
-flit install
+```
+
+<!-- Installation -->
+### 2.3. Installation
+
+#### 2.3.1. Production
+
+Install with flit
+
+```bash
+  flit install --deps production
 ```
 
 Alternatively, you can use pip
 
 ```bash
 pip install ak_selenium
+```
+
+#### 2.3.2. Development
+
+Install with flit
+
+```bash
+  flit install --pth-file
 ```
 
 <!-- Usage -->
@@ -93,7 +116,8 @@ s.get('https://www.iana.org/domains/reserved')
 <!-- Roadmap -->
 ## 4. Roadmap
 
-- [ ]
+- [ ] Add beautifulsoup integration
+- [ ] Proxy
 
 <!-- License -->
 ## 5. License
@@ -103,14 +127,12 @@ See LICENSE.txt for more information.
 <!-- Contact -->
 ## 6. Contact
 
-Arun Kishore - [@rpakishore](mailto:rpakishore@gmail.com)
+Arun Kishore - [@rpakishore](mailto:pypi@rpakishore.co.in)
 
-Project Link: [https://github.com/rpakishore/](https://github.com/rpakishore/ak_selenium)
+Project Link: [https://github.com/rpakishore/ak_selenium](https://github.com/rpakishore/ak_selenium)
 
 <!-- Acknowledgments -->
 ## 7. Acknowledgements
-
-Use this section to mention useful resources and libraries that you have used in your projects.
 
 - [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
 - [Banner Maker](https://banner.godori.dev/)

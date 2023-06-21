@@ -8,7 +8,14 @@ authors = [{name = "Arun Kishore", email = "pypi@rpakishore.co.in"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
-dependencies=["pytest", "selenium", "webdriver-manager", "requests"]
+dependencies=["selenium", "webdriver-manager", "requests"]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "ipykernel"
+]
+
 
 [project.urls]
 Home = "https://github.com/rpakishore/ak_selenium"
