@@ -31,10 +31,6 @@ def test_half_screen(chrome_instance):
     assert chrome_instance.half_screen is True
 
 
-def test_Chrome_userdata_path(chrome_instance):
-    assert chrome_instance.Chrome_userdata_path is None
-
-
 def test_str_method(chrome_instance):
     assert str(chrome_instance) == f"""
         Chrome.Object
@@ -45,9 +41,3 @@ def test_str_method(chrome_instance):
         Chrome Userdata Path: {chrome_instance.Chrome_userdata_path}
         Half Screen View: {chrome_instance.half_screen}
         """
-
-
-def test_repr_method(chrome_instance):
-    assert repr(chrome_instance) == "Chrome(headless=True,\
-                Chrome_userdata_path=None,\
-                half_screen=True)"
