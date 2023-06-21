@@ -91,9 +91,9 @@ Install with flit
 ```python
 from ak_selenium import Chrome
 chrome = Chrome(
-    headless=False, 
-    Chrome_userdata_path=r"Path\to\User Data",
-    half_screen=True,
+    headless=False,   # Start Chrome in headless mode
+    Chrome_userdata_path=r"Path\to\User Data",  # Path to `User Data` folder, Defaults to correct location in windows
+    half_screen=True,   # Set the browser resolution to half the screen size (only applicable if NOT `headless`)
 )
 
 #Get Chromedriver
