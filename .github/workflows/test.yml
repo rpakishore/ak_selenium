@@ -1,12 +1,13 @@
 name: tests
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
   build:
     runs-on: '${{ matrix.os }}'
-    paths-ignore:
-      - '**/README.md'
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
