@@ -17,6 +17,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pathlib import Path
 import sys
 
+from typing import Literal
+
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                 AppleWebKit/537.36 (KHTML, like Gecko) \
@@ -167,6 +169,20 @@ class Chrome:
             if element.text.strip() == text:
                 return element
         return None
+    
+    def scroll(self, direction: Literal["top", "bottom"] = "bottom") -> None:
+        """
+        Scroll the webpage to the specified direction.
+        Args:
+            direction (Literal["top", "bottom"]): The direction to scroll. Valid 
+                values are "top" and "bottom". Defaults to "bottom"
+        """
+        match direction:
+            case "top":
+                self.driver.execute_script("window.scrollTo(0, 0)")
+            case "bottom":
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
     
 
 def _ram_optimization_browser_options(options: Options) -> Options:
