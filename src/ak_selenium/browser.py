@@ -3,8 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common import exceptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote.webelement import WebElement
@@ -19,12 +18,9 @@ class Chrome:
                 Chrome/83.0.4103.53 Safari/537.36'
     IMPLICITLY_WAIT_TIME = 3
     MAX_WAIT_TIME = 5
+    EXCEPTIONS = exceptions
 
-    def __init__(
-            self, headless:bool = False, 
-            chrome_userdata_path:str=None, 
-            half_screen:bool=True
-            ):
+    def __init__(self, headless:bool = False, chrome_userdata_path:str=None, half_screen:bool=True):
         
         self.headless = headless
         
@@ -204,5 +200,3 @@ class Chrome:
                 self.driver.execute_script("window.scrollTo(0, 0)")
             case "bottom":
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-    
