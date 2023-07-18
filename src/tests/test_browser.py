@@ -31,6 +31,6 @@ def test_str_method(chrome_instance):
         Implicit Wait Time: {chrome_instance.IMPLICITLY_WAIT_TIME:.2f}s
         Max Wait Time: {chrome_instance.MAX_WAIT_TIME:.2f}s
         Headless: {chrome_instance.headless}
-        Chrome Userdata Path: {chrome_instance.Chrome_userdata_path}
+        Chrome Userdata Path: {chrome_instance.chrome_userdata_path}
         Half Screen View: {chrome_instance.half_screen}
         """

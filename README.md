@@ -89,7 +89,29 @@ Install with flit
 <!-- Usage -->
 ## 3. Usage
 
-![Usage](assets/usage.png)
+```python
+from ak_selenium import Chrome, By, Keys
+chrome = Chrome(
+    headless=False, # Start Chrome in headless mode
+    chrome_userdata_path=r"path\to\user\data", #Defaults to correct location in windows
+    half_screen=True, # Set the browser to half the screen size (Only applicable if NOT `headless`)
+    )
+
+#Get Chromedriver
+driver = chrome.init_chrome()
+
+#Get the website
+driver.get("https://example.com")
+
+#Wait for elements to load
+locator = (By.TAG_NAME, "h1")
+chrome.Wait_for_locator(locator)
+
+#Get requests Session
+s = chrome.update_req_headers_cookies()
+s.get("https://www.iana.org/domains/reserved")
+
+```
 
 ### Additional Options
 

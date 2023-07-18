@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pathlib import Path
 import sys
 from typing import Literal
+import requests
 
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -151,15 +152,17 @@ class Chrome:
             element.clear()
         element.send_keys(text)
     
-    def init_requests(self):
-        import requests
+    def init_requests(self) -> requests.Session:
+        
         self.s = requests.Session()
         return self.s
     
-    def update_req_headers_cookies(self):
+    def update_req_headers_cookies(self) -> requests.Session:
         driver = self.driver
         if not self.s:
             s = self.init_requests()
+        else:
+            s = self.s
         s.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
         s.headers.update({
             "Accept-Language": driver.execute_script("return window.navigator.language;"),

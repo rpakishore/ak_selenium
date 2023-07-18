@@ -21,6 +21,5 @@ test = [
     "ipykernel"
 ]
 
-
 [project.urls]
 Home = "https://github.com/rpakishore/ak_selenium"
