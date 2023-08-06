@@ -191,15 +191,23 @@ class Chrome:
                 return element
         return None
     
-    def scroll(self, direction: Literal["top", "bottom"] = "bottom") -> None:
+    def scroll(self, direction: Literal["top", "bottom"] = "bottom", alternative_method: bool = False) -> None:
         """
         Scroll the webpage to the specified direction.
         Args:
             direction (Literal["top", "bottom"]): The direction to scroll. Valid 
                 values are "top" and "bottom". Defaults to "bottom"
+            alternative_method (bool): Uses `Keys` to scroll. Defaults to False.
         """
         match direction:
             case "top":
-                self.driver.execute_script("window.scrollTo(0, 0)")
+                if alternative_method:
+                    self.driver.send_keys(Keys.HOME)
+                else:
+                    self.driver.execute_script("window.scrollTo(0, 0)")
+                
             case "bottom":
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                if alternative_method:
+                    self.driver.send_keys(Keys.END)
+                else:
+                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
