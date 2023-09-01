@@ -38,13 +38,18 @@
 <!-- About the Project -->
 ## 1. About the Project
 
+`ak_selenium` is a Python package that provides an interface for automating browser tasks using Selenium. It comes with built-in functionalities for handling common tasks such as form filling, scrolling, and waiting for elements to load. Additionally, it has a built-in requests session that handles retries and timeouts, making it easier to send HTTP requests.
+
 <!-- Features -->
 ### 1.1. Features
 
-- Launch Selenium with custom options
-- Automatically try to add Chrome UserData
-- Add anti-bot detection measures
+- Chrome browser automation using Selenium WebDriver.
+- Built-in methods for form filling, scrolling, and waiting for elements.
+- Anti-bot detection measures
 - Pass selenium headers/cookies to requests library
+- Built-in requests session with retries and timeouts.
+- Ability to use Chrome user data for browser automation.
+- RAM optimization for browser options.
 
 <!-- Getting Started -->
 ## 2. Getting Started
@@ -91,31 +96,56 @@ Install with flit
 
 ```python
 from ak_selenium import Chrome, By, Keys
-chrome = Chrome(
-    headless=False, # Start Chrome in headless mode
-    chrome_userdata_path=r"path\to\user\data", #Defaults to correct location in windows
-    half_screen=True, # Set the browser to half the screen size (Only applicable if NOT `headless`)
-    )
+
+from ak_selenium import Chrome
+
+# Create a new Chrome browser instance
+browser = Chrome(headless=True)
 
 #Get Chromedriver
 driver = chrome.driver
 
-#Get the website
+# Navigate to a webpage
 driver.get("https://example.com")
 
+# Wait for an element to load
 #Wait for elements to load
 locator = (By.TAG_NAME, "h1")
 chrome.Wait_for_locator(locator)
 
-#Get requests Session
+# Fill a form
+element = browser.driver.find_element_by_id("my-form")
+browser.fill_userinput_form(element, "Hello, world!")
+
+# Pass selenium session to requests
 s = chrome.session
+
+# Get a website
 s.get("https://www.iana.org/domains/reserved")
 
+# Get a list of websites
+## Will randomize requests to not trigger bot detection
+s.bulk_get(["https://www.iana.org/domains/reserved", "https://www.example.com"])
 ```
 
 ### Additional Options
 
-![Additional Options](assets/Addl_Options.png)
+```python
+# Selenium Overrides
+## Overide default useragent
+chrome.USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+                    AppleWebKit/537.36 (KHTML, like Gecko) \
+                    Chrome/83.0.4103.53 Safari/537.36'
+
+## Override implicit and max wait times for selenium
+chrome.IMPLICITLY_WAIT_TIME = 3 #seconds
+chrome.MAX_WAIT_TIME = 5 #seconds
+
+# Requests.Session Override
+MAX_RETRY = 5
+MIN_REQUEST_GAP = 0.9 #seconds between requests
+```
+
 <!-- Roadmap -->
 ## 4. Roadmap
 
@@ -125,7 +155,7 @@ s.get("https://www.iana.org/domains/reserved")
 <!-- License -->
 ## 5. License
 
-See LICENSE.txt for more information.
+See LICENSE for more information.
 
 <!-- Contact -->
 ## 6. Contact

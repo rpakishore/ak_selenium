@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,7 +13,97 @@ import sys
 from typing import Literal
 import requests
 from functools import cached_property
+from requests.adapters import HTTPAdapter, Retry
+import time
+import random
 
+DEFAULT_TIMEOUT_s = 5 #seconds
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    #Courtesy of https://findwork.dev/blog/advanced-usage-python-requests-timeouts-retries-hooks/
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT_s
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
+    
+class RequestsSession:
+    MAX_RETRY = 5
+    MIN_REQUEST_GAP = 0.9 #seconds
+    last_request_time = None
+    
+    def __init__(self):
+        session = requests.Session()
+        self._set_default_headers()
+        session = self._set_default_retry_adapter(session=session)
+        self.session = session
+
+    def __repr__(self) -> str:
+        return "RequestsSession()"
+    
+    def __str__(self) -> str:
+        return "RequestsSession class initiated by Selenium Driver"
+
+    def _set_default_retry_adapter(self, session: requests.Session) -> requests.Session:
+        retries = Retry(total=self.MAX_RETRY,
+                        backoff_factor=0.5,
+                        status_forcelist=[429, 500, 502, 503, 504]
+                        )
+        session.mount('http://', TimeoutHTTPAdapter(max_retries=retries))
+        session.mount('https://', TimeoutHTTPAdapter(max_retries=retries))
+        return session
+    
+    def get(self, *args, **kwargs) -> requests.Response:
+        min_req_gap = self.MIN_REQUEST_GAP
+        if self.last_request_time is not None:
+            elapsed_time = time.time() - self.last_request_time
+            if elapsed_time < min_req_gap:
+                time.sleep(min_req_gap - elapsed_time)
+        self.last_request_time = time.time()
+        return self.session.get(*args, **kwargs)
+    
+    def bulk_get(self, urls: list[str], *args, **kwargs) -> list[requests.Response]:
+        duplicate_list = urls[:]
+        random.shuffle(duplicate_list)  #shuffle to prevent scrape detection
+        
+        req = {}
+        for url in duplicate_list:
+            req[url] = self.get(url, *args, **kwargs)
+        return [req[url] for url in urls]
+    
+    def _set_default_headers(self) -> None:
+        _header = {
+            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                            'AppleWebKit/537.36 (KHTML, like Gecko) '
+                            'Chrome/91.0.4472.124 Safari/537.36'),
+            'Accept': ('text/html,application/xhtml+xml,application/xml;q=0.9,'
+                        'image/avif,image/webp,*/*;q=0.8'),
+            'Accept-Language': 'en-CA,en-US;q=0.7,en;q=0.3',
+            'Connection': 'keep-alive',
+            'Referer': 'https://www.google.com/',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1'
+            }
+        self.update_header(header=_header)
+    
+    def update_header(self, header: dict) -> requests.Session:
+        self.session.headers.update(header)
+        return self.session
+    
+    def update_cookies(self, cookies: list[dict]) -> requests.Session:
+        self.session.cookies.update({c['name']: c['value'] for c in cookies})
+        return self.session
+    
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                 AppleWebKit/537.36 (KHTML, like Gecko) \
@@ -161,21 +252,20 @@ class Chrome:
         return None
     
     @cached_property
-    def base_session(self) -> requests.Session:
-        _s = requests.Session()
+    def base_session(self) -> RequestsSession:
+        _s = RequestsSession()
         return _s
     
     @property
-    def session(self) -> requests.Session:
+    def session(self) -> RequestsSession:
         driver = self.driver
         s = self.base_session
-        s.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
-        s.headers.update({
-            "Accept-Language": driver.execute_script("return window.navigator.language;"),
-            "X-Forwarded-For": driver.execute_script("return window.navigator.ip;"),
-            "X-Timezone": driver.execute_script("return window.navigator.timezone;"),
-            "User-Agent": driver.execute_script("return window.navigator.userAgent;"),
-            "Connection": "keep-alive"
+        s.update_cookies(driver.get_cookies())
+        s.update_header({
+        "Accept-Language": driver.execute_script("return window.navigator.language;"),
+        "X-Forwarded-For": driver.execute_script("return window.navigator.ip;"),
+        "X-Timezone": driver.execute_script("return window.navigator.timezone;"),
+        "User-Agent": driver.execute_script("return window.navigator.userAgent;"),
         })
         return s
     
@@ -198,7 +288,7 @@ class Chrome:
         return None
     
     def scroll(self, direction: Literal["top", "bottom"] = "bottom", 
-               alternative_method: bool = False) -> None:
+                alternative_method: bool = False) -> None:
         """
         Scroll the webpage to the specified direction.
         Args:
@@ -206,15 +296,16 @@ class Chrome:
                 values are "top" and "bottom". Defaults to "bottom"
             alternative_method (bool): Uses `Keys` to scroll. Defaults to False.
         """
+        _el = self.driver.find_element(By.TAG_NAME, 'div')
         match direction:
             case "top":
                 if alternative_method:
-                    self.driver.send_keys(Keys.HOME)
+                    _el.send_keys(Keys.HOME)
                 else:
                     self.driver.execute_script("window.scrollTo(0, 0)")
                 
             case "bottom":
                 if alternative_method:
-                    self.driver.send_keys(Keys.END)
+                    _el.send_keys(Keys.END)
                 else:
-                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")  # noqa: E501
