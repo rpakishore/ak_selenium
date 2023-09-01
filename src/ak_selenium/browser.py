@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 from selenium.common import exceptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -22,25 +21,25 @@ class Chrome:
     MAX_WAIT_TIME = 5
     EXCEPTIONS = exceptions
 
-    def __init__(
-        self, 
-        headless:bool = False, 
-        chrome_userdata_path:str|None=None, 
-        half_screen:bool=True) -> None:
+    def __init__(self, headless:bool = False, 
+        chrome_userdata_path:str|None=None, half_screen:bool=True) -> None:
         
         self.headless = headless
+        self._set_userdata_path(datapath=chrome_userdata_path)
+        self.half_screen = half_screen
+        return None
+    
+    def _set_userdata_path(self, datapath: str | None) -> str | None:
+        self.chrome_userdata_path: str | None = None
         
-        if not chrome_userdata_path and sys.platform=="win32":
+        if not datapath and sys.platform=="win32":
             _chrome_userdata_path: Path = Path.home() / 'AppData' / 'Local' / 'Google' / 'Chrome' / 'User Data'
             if not _chrome_userdata_path.exists():
-                self.chrome_userdata_path: str | None = None
+                self.chrome_userdata_path = None
             else:
-                self.chrome_userdata_path: str | None = str(_chrome_userdata_path)
-                
-        self.half_screen = half_screen
-        self.s = None
-        #self.driver = None
-        return None
+                self.chrome_userdata_path = str(_chrome_userdata_path)
+        
+        return self.chrome_userdata_path
     
     def __str__(self) -> str:
         return f"""
@@ -111,7 +110,6 @@ class Chrome:
             driver.set_window_size(size['width']/2, size['height'])
             driver.set_window_position(size['width']/2-13, 0)
             
-        #self.driver: webdriver.Chrome = driver
         return driver
         
     @staticmethod
@@ -153,23 +151,22 @@ class Chrome:
         Args:
             element (WebElement): The input form element.
             text (str): The text to fill in the form element.
-            clear_existing (bool): Whether to clear existing text before filling. Defaults to True.
+            clear_existing (bool): Whether to clear existing text before filling.\
+                Defaults to True.
         """
         if clear_existing:
             element.clear()
         element.send_keys(text)
     
-    def _init_requests(self) -> requests.Session:
-        self.s = requests.Session()
-        return self.s
+    @cached_property
+    def base_session(self) -> requests.Session:
+        _s = requests.Session()
+        return _s
     
     @property
     def session(self) -> requests.Session:
         driver = self.driver
-        if not self.s:
-            s = self._init_requests()
-        else:
-            s = self.s
+        s = self.base_session
         s.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
         s.headers.update({
             "Accept-Language": driver.execute_script("return window.navigator.language;"),
@@ -178,7 +175,6 @@ class Chrome:
             "User-Agent": driver.execute_script("return window.navigator.userAgent;"),
             "Connection": "keep-alive"
         })
-        self.s = s
         return s
     
     @staticmethod
