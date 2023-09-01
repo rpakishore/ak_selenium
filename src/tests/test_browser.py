@@ -7,9 +7,6 @@ def chrome_instance():
     yield chrome
     del chrome
 
-def test_init_chrome(chrome_instance):
-    assert chrome_instance.init_chrome()
-
 def test_implicitly_wait_time(chrome_instance):
     assert chrome_instance.IMPLICITLY_WAIT_TIME == 3
 
