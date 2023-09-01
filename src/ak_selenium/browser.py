@@ -131,7 +131,7 @@ class Chrome:
         options.add_argument("--disable-web-security")
         return options
     
-    def Wait_for_locator(self, locator: tuple) -> None:
+    def wait_for_locator(self, locator: tuple) -> None:
         """
         Wait until the element with the specified locator is present.
 
@@ -191,14 +191,16 @@ class Chrome:
             text (str): The text to match against the elements' text content.
 
         Returns:
-            WebElement or None: The first WebElement that matches the provided text, or None if no match is found.
+            WebElement or None: The first WebElement that matches the provided text,\
+                or None if no match is found.
         """
         for element in elements:
             if element.text.strip() == text:
                 return element
         return None
     
-    def scroll(self, direction: Literal["top", "bottom"] = "bottom", alternative_method: bool = False) -> None:
+    def scroll(self, direction: Literal["top", "bottom"] = "bottom", 
+               alternative_method: bool = False) -> None:
         """
         Scroll the webpage to the specified direction.
         Args:
