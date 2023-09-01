@@ -108,7 +108,7 @@ locator = (By.TAG_NAME, "h1")
 chrome.Wait_for_locator(locator)
 
 #Get requests Session
-s = chrome.update_req_headers_cookies()
+s = chrome.session
 s.get("https://www.iana.org/domains/reserved")
 
 ```

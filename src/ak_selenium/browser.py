@@ -131,7 +131,7 @@ class Chrome:
         options.add_argument("--disable-web-security")
         return options
     
-    def Wait_for_locator(self,locator: tuple) -> None:
+    def Wait_for_locator(self, locator: tuple) -> None:
         """
         Wait until the element with the specified locator is present.
 
@@ -145,7 +145,8 @@ class Chrome:
         return None
 
     @staticmethod
-    def fill_userinput_form(element: WebElement, text: str, clear_existing: bool=True) -> None:
+    def fill_userinput_form(element: WebElement, 
+                            text: str, clear_existing: bool=True) -> None:
         """
         Fill a user input form element with the specified text.
 
@@ -158,15 +159,15 @@ class Chrome:
             element.clear()
         element.send_keys(text)
     
-    def init_requests(self) -> requests.Session:
-        
+    def _init_requests(self) -> requests.Session:
         self.s = requests.Session()
         return self.s
     
-    def update_req_headers_cookies(self) -> requests.Session:
+    @property
+    def session(self) -> requests.Session:
         driver = self.driver
         if not self.s:
-            s = self.init_requests()
+            s = self._init_requests()
         else:
             s = self.s
         s.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
