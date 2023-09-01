@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 from typing import Literal
 import requests
+from functools import cached_property
 
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -21,20 +22,24 @@ class Chrome:
     MAX_WAIT_TIME = 5
     EXCEPTIONS = exceptions
 
-    def __init__(self, headless:bool = False, chrome_userdata_path:str=None, half_screen:bool=True):
+    def __init__(
+        self, 
+        headless:bool = False, 
+        chrome_userdata_path:str|None=None, 
+        half_screen:bool=True) -> None:
         
         self.headless = headless
         
         if not chrome_userdata_path and sys.platform=="win32":
-            chrome_userdata_path = Path.home() / 'AppData' / 'Local' / 'Google' / 'Chrome' / 'User Data'
-            if not chrome_userdata_path.exists():
-                chrome_userdata_path = None
+            _chrome_userdata_path: Path = Path.home() / 'AppData' / 'Local' / 'Google' / 'Chrome' / 'User Data'
+            if not _chrome_userdata_path.exists():
+                self.chrome_userdata_path: str | None = None
             else:
-                chrome_userdata_path = str(chrome_userdata_path)
-        self.chrome_userdata_path = chrome_userdata_path
+                self.chrome_userdata_path: str | None = str(_chrome_userdata_path)
+                
         self.half_screen = half_screen
         self.s = None
-        self.driver = None
+        #self.driver = None
         return None
     
     def __str__(self) -> str:
@@ -58,7 +63,8 @@ class Chrome:
             self.driver.quit()
         return None
     
-    def init_chrome(self) -> webdriver.Chrome:
+    @cached_property
+    def driver(self) -> webdriver.Chrome:
         """
         Initializes a Chrome web driver with specific options and configurations.
         
@@ -78,14 +84,15 @@ class Chrome:
     
         options = self._ram_optimization_browser_options(options)
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                                       options=options)
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options)
 
         driver.implicitly_wait(self.IMPLICITLY_WAIT_TIME) 
 
         driver.execute_script('window.focus()')
         driver.execute_cdp_cmd('Network.setUserAgentOverride',
-                               {"userAgent": self.USERAGENT})
+                                {"userAgent": self.USERAGENT})
 
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument",
         {
@@ -97,17 +104,16 @@ class Chrome:
 
         driver.execute_cdp_cmd("Network.enable", {})
         driver.execute_cdp_cmd("Network.setExtraHTTPHeaders",
-                               {"headers": {"User-Agent": "browser1"}})
+                                {"headers": {"User-Agent": "browser1"}})
 
         if self.half_screen:
             size = driver.get_window_size()
             driver.set_window_size(size['width']/2, size['height'])
             driver.set_window_position(size['width']/2-13, 0)
             
-        self.driver = driver
-        
+        #self.driver: webdriver.Chrome = driver
         return driver
-
+        
     @staticmethod
     def _ram_optimization_browser_options(options: Options) -> Options:
         options.add_argument("disable-infobars")

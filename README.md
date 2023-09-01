@@ -98,7 +98,7 @@ chrome = Chrome(
     )
 
 #Get Chromedriver
-driver = chrome.init_chrome()
+driver = chrome.driver
 
 #Get the website
 driver.get("https://example.com")
