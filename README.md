@@ -24,12 +24,11 @@
 - [1. About the Project](#1-about-the-project)
   - [1.1. Features](#11-features)
 - [2. Getting Started](#2-getting-started)
-  - [2.1. Dependencies](#21-dependencies)
-  - [2.3. Installation](#23-installation)
-    - [2.3.1. Production](#231-production)
-    - [2.3.2. Development](#232-development)
+  - [2.1. Installation](#21-installation)
+    - [2.1.1. Production](#211-production)
+    - [2.1.2. Development](#212-development)
 - [3. Usage](#3-usage)
-  - [Additional Options](#additional-options)
+  - [3.1. Additional Options](#31-additional-options)
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
 - [6. Contact](#6-contact)
@@ -54,27 +53,16 @@
 <!-- Getting Started -->
 ## 2. Getting Started
 
-### 2.1. Dependencies
-
-Create the virutual environment and install dependencies
-
-```bash
-python -m venv .venv
-
-.venv\Scripts\activate.bat
-
-pip install flit
-```
-
 <!-- Installation -->
-### 2.3. Installation
+### 2.1. Installation
 
-#### 2.3.1. Production
+#### 2.1.1. Production
 
 Install with flit
 
 ```bash
-  flit install --deps production
+pip install flit
+flit install --deps production
 ```
 
 Alternatively, you can use pip
@@ -83,12 +71,12 @@ Alternatively, you can use pip
 pip install ak_selenium
 ```
 
-#### 2.3.2. Development
+#### 2.1.2. Development
 
 Install with flit
 
 ```bash
-  flit install --pth-file
+flit install --pth-file
 ```
 
 <!-- Usage -->
@@ -96,8 +84,6 @@ Install with flit
 
 ```python
 from ak_selenium import Chrome, By, Keys
-
-from ak_selenium import Chrome
 
 # Create a new Chrome browser instance
 browser = Chrome(headless=True)
@@ -128,7 +114,7 @@ s.get("https://www.iana.org/domains/reserved")
 s.bulk_get(["https://www.iana.org/domains/reserved", "https://www.example.com"])
 ```
 
-### Additional Options
+### 3.1. Additional Options
 
 ```python
 # Selenium Overrides
