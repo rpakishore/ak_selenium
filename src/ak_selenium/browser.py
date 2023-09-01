@@ -157,6 +157,8 @@ class Chrome:
         if clear_existing:
             element.clear()
         element.send_keys(text)
+        
+        return None
     
     @cached_property
     def base_session(self) -> requests.Session:
@@ -178,7 +180,7 @@ class Chrome:
         return s
     
     @staticmethod
-    def find_element_by_text(elements:list[WebElement], text: str) -> WebElement:
+    def find_element_by_text(elements:list[WebElement], text: str) -> WebElement | None:
         """
         Finds a WebElement from a list based on its text content.
 
