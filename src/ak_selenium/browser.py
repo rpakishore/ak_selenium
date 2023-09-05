@@ -40,10 +40,9 @@ class RequestsSession:
     last_request_time = None
     
     def __init__(self):
-        session = requests.Session()
+        self.session = requests.Session()
         self._set_default_headers()
-        session = self._set_default_retry_adapter(session=session)
-        self.session = session
+        self.session = self._set_default_retry_adapter()
 
     def __repr__(self) -> str:
         return "RequestsSession()"
@@ -51,14 +50,14 @@ class RequestsSession:
     def __str__(self) -> str:
         return "RequestsSession class initiated by Selenium Driver"
 
-    def _set_default_retry_adapter(self, session: requests.Session) -> requests.Session:
+    def _set_default_retry_adapter(self) -> requests.Session:
         retries = Retry(total=self.MAX_RETRY,
                         backoff_factor=0.5,
                         status_forcelist=[429, 500, 502, 503, 504]
                         )
-        session.mount('http://', TimeoutHTTPAdapter(max_retries=retries))
-        session.mount('https://', TimeoutHTTPAdapter(max_retries=retries))
-        return session
+        self.session.mount('http://', TimeoutHTTPAdapter(max_retries=retries))
+        self.session.mount('https://', TimeoutHTTPAdapter(max_retries=retries))
+        return self.session
     
     def get(self, *args, **kwargs) -> requests.Response:
         min_req_gap = self.MIN_REQUEST_GAP
