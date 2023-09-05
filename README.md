@@ -128,8 +128,7 @@ chrome.IMPLICITLY_WAIT_TIME = 3 #seconds
 chrome.MAX_WAIT_TIME = 5 #seconds
 
 # Requests.Session Override
-MAX_RETRY = 5
-MIN_REQUEST_GAP = 0.9 #seconds between requests
+s.MIN_REQUEST_GAP = 0.9 #seconds between requests
 ```
 
 <!-- Roadmap -->
@@ -154,6 +153,4 @@ Project Link: [https://github.com/rpakishore/ak_selenium](https://github.com/rpa
 ## 7. Acknowledgements
 
 - [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
-- [Banner Maker](https://banner.godori.dev/)
 - [Shields.io](https://shields.io/)
-- [Carbon](https://carbon.now.sh/)

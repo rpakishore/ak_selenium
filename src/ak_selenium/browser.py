@@ -11,98 +11,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pathlib import Path
 import sys
 from typing import Literal
-import requests
 from functools import cached_property
-from requests.adapters import HTTPAdapter, Retry
-import time
-import random
 
-DEFAULT_TIMEOUT_s = 5 #seconds
+from ak_requests import RequestsSession
 
-class TimeoutHTTPAdapter(HTTPAdapter):
-    #Courtesy of https://findwork.dev/blog/advanced-usage-python-requests-timeouts-retries-hooks/
-    def __init__(self, *args, **kwargs):
-        self.timeout = DEFAULT_TIMEOUT_s
-        if "timeout" in kwargs:
-            self.timeout = kwargs["timeout"]
-            del kwargs["timeout"]
-        super().__init__(*args, **kwargs)
-
-    def send(self, request, **kwargs):
-        timeout = kwargs.get("timeout")
-        if timeout is None:
-            kwargs["timeout"] = self.timeout
-        return super().send(request, **kwargs)
-    
-class RequestsSession:
-    MAX_RETRY = 5
-    MIN_REQUEST_GAP = 0.9 #seconds
-    last_request_time = None
-    
-    def __init__(self):
-        self.session = requests.Session()
-        self._set_default_headers()
-        self.session = self._set_default_retry_adapter()
-
-    def __repr__(self) -> str:
-        return "RequestsSession()"
-    
-    def __str__(self) -> str:
-        return "RequestsSession class initiated by Selenium Driver"
-
-    def _set_default_retry_adapter(self) -> requests.Session:
-        retries = Retry(total=self.MAX_RETRY,
-                        backoff_factor=0.5,
-                        status_forcelist=[429, 500, 502, 503, 504]
-                        )
-        self.session.mount('http://', TimeoutHTTPAdapter(max_retries=retries))
-        self.session.mount('https://', TimeoutHTTPAdapter(max_retries=retries))
-        return self.session
-    
-    def get(self, *args, **kwargs) -> requests.Response:
-        min_req_gap = self.MIN_REQUEST_GAP
-        if self.last_request_time is not None:
-            elapsed_time = time.time() - self.last_request_time
-            if elapsed_time < min_req_gap:
-                time.sleep(min_req_gap - elapsed_time)
-        self.last_request_time = time.time()
-        return self.session.get(*args, **kwargs)
-    
-    def bulk_get(self, urls: list[str], *args, **kwargs) -> list[requests.Response]:
-        duplicate_list = urls[:]
-        random.shuffle(duplicate_list)  #shuffle to prevent scrape detection
-        
-        req = {}
-        for url in duplicate_list:
-            req[url] = self.get(url, *args, **kwargs)
-        return [req[url] for url in urls]
-    
-    def _set_default_headers(self) -> None:
-        _header = {
-            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                            'AppleWebKit/537.36 (KHTML, like Gecko) '
-                            'Chrome/91.0.4472.124 Safari/537.36'),
-            'Accept': ('text/html,application/xhtml+xml,application/xml;q=0.9,'
-                        'image/avif,image/webp,*/*;q=0.8'),
-            'Accept-Language': 'en-CA,en-US;q=0.7,en;q=0.3',
-            'Connection': 'keep-alive',
-            'Referer': 'https://www.google.com/',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1'
-            }
-        self.update_header(header=_header)
-    
-    def update_header(self, header: dict) -> requests.Session:
-        self.session.headers.update(header)
-        return self.session
-    
-    def update_cookies(self, cookies: list[dict]) -> requests.Session:
-        self.session.cookies.update({c['name']: c['value'] for c in cookies})
-        return self.session
-    
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                 AppleWebKit/537.36 (KHTML, like Gecko) \
@@ -252,7 +164,7 @@ class Chrome:
     
     @cached_property
     def base_session(self) -> RequestsSession:
-        _s = RequestsSession()
+        _s = RequestsSession(log=False, retries=5)
         return _s
     
     @property
