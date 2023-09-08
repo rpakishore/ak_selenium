@@ -14,6 +14,7 @@ from typing import Literal
 from functools import cached_property
 
 from ak_requests import RequestsSession
+from bs4 import BeautifulSoup
 
 class Chrome:
     USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -220,3 +221,8 @@ class Chrome:
                     _el.send_keys(Keys.END)
                 else:
                     self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")  # noqa: E501
+                    
+    @property
+    def soup(self) -> BeautifulSoup:
+        """Returns soup object of current page"""
+        return BeautifulSoup(self.driver.page_source, 'html.parser')
