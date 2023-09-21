@@ -199,6 +199,9 @@ class Chrome:
                 return element
         return None
     
+    def find_button_by_text(self, text: str) -> WebElement | None:
+        return self.find_element_by_text(self.driver.find_elements(By.TAG_NAME, 'button'), text)
+    
     def scroll(self, direction: Literal["top", "bottom"] = "bottom", 
                 alternative_method: bool = False) -> None:
         """
