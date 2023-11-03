@@ -132,7 +132,7 @@ class Chrome:
         options.add_argument("--disable-web-security")
         return options
     
-    def wait_for_locator(self, locator: tuple) -> None:
+    def wait_for_locator(self, locator: tuple[str, str]) -> None:
         """
         Wait until the element with the specified locator is present.
 
