@@ -13,7 +13,7 @@ requires-python = ">=3.11.0"
 dependencies=[
     "selenium", 
     "webdriver-manager>=3.9.1", 
-    "ak_requests == 0.0.2"
+    "ak_requests == 0.0.3"
     ]
 
 [project.optional-dependencies]
