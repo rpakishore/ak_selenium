@@ -49,6 +49,7 @@
 - Built-in requests session with retries and timeouts.
 - Ability to use Chrome user data for browser automation.
 - RAM optimization for browser options.
+- Integrates [Helium](https://github.com/mherrmann/helium) for easier automation
 
 <!-- Getting Started -->
 ## 2. Getting Started
@@ -85,33 +86,57 @@ flit install --pth-file
 ```python
 from ak_selenium import Chrome, By, Keys
 
-# Create a new Chrome browser instance
-chrome = Chrome(headless=True)
+chrome = Chrome(headless=True)                  # Create a new Chrome browser instance
+driver = chrome.driver                          #Get Chromedriver
+chrome.get("https://example.com")               # Navigate to a webpage
 
-#Get Chromedriver
-driver = chrome.driver
-
-# Navigate to a webpage
-driver.get("https://example.com")
-
-# Wait for an element to load
-#Wait for elements to load
+#Wait for element to load
 locator = (By.TAG_NAME, "h1")
-chrome.Wait_for_locator(locator)
+chrome.wait_for_locator(locator)
 
-# Fill a form
-element = chrome.driver.find_element_by_id("my-form")
-chrome.fill_userinput_form(element, "Hello, world!")
-
-# Pass selenium session to requests
-s = chrome.session
-
-# Get a website
-s.get("https://www.iana.org/domains/reserved")
+s = chrome.session                              # Pass selenium session to requests
+s.get("https://www.iana.org/domains/reserved")  # Get a website
 
 # Get a list of websites
 ## Will randomize requests to not trigger bot detection
 s.bulk_get(["https://www.iana.org/domains/reserved", "https://www.example.com"])
+
+```
+
+Integrated with [Helium](https://github.com/mherrmann/helium) to make it easier to set up automation.
+
+Helium methods and functions can be used as intended in the [original documentation](https://github.com/mherrmann/helium/blob/master/README.md)
+
+Example:
+
+```python
+import helium
+helium.wait_until(helium.Button('Download').exists)
+```
+
+Alternatively, helium methods and classes have been collected into two classes `Element` and `Action` for convinience
+
+`Element` exposes the following classes: `Alert`, `Button`, `CheckBox`, `ComboBox`, `Image`, `Link`, `ListItem`, `RadioButton`, `Text`, `TextField` and the method `find_all`
+
+`Action` exposes the following methods: `highlight`, `wait_until`, `refresh`, `attach_file`, `drag_file`, `combobox_select`, `hover`, `write`.
+`Action` also incorporates a `Mouse` sub-class that collect mouse-related methods.
+
+Example:
+
+```python
+from ak_selenium import Element, Action, Keys
+import helium
+
+chrome.get('https://google.com')                      #Go to website
+Action.write('helium selenium github')                #Enter text into text field
+helium.press(Keys.ENTER)                              #Press Enter
+Action.Mouse.click('mherrmann/helium')                #Click
+chrome.get('https://github.com/login')                #Goto github
+Action.write('username', into='Username')             #Enter Username into Username field
+Action.write('password', into='Password')             #Enter Password into Password field
+Action.Mouse.click('Sign in')                         #Click Sign-in
+Action.Mouse.scroll(direction='down', num_pixels=100) #Scroll down 100px
+helium.kill_browser()                                 #Close the browser
 ```
 
 ### 3.1. Additional Options
@@ -154,3 +179,4 @@ Project Link: [https://github.com/rpakishore/ak_selenium](https://github.com/rpa
 
 - [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
 - [Shields.io](https://shields.io/)
+- [Helium](https://github.com/mherrmann/helium)
