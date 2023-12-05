@@ -1,8 +1,9 @@
+from helium import start_chrome
 from selenium import webdriver
 
-from selenium.webdriver.chrome.service import Service
+#from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 
 import logging
 import os
@@ -28,7 +29,7 @@ class Chrome(Browser):
         self.half_screen = half_screen
         self.chrome_userdata_path = chrome_userdata_path
                 
-        self.driver = self._driver()
+        self.driver: webdriver.Chrome = self._driver()
         super().__init__(driver=self.driver)
         self._prep_driver(useragent=self.USERAGENT)
         
@@ -63,12 +64,7 @@ class Chrome(Browser):
         return f"Chrome(headless={self.headless},\
                 chrome_userdata_path={self.chrome_userdata_path},\
                 half_screen={self.half_screen})"
-    
-    def __del__(self) -> None:
-        if self.driver:
-            self.driver.quit()
-        return None
-    
+
     def _driver(self) -> webdriver.Chrome:
         """
         Initializes a Chrome web driver with specific options and configurations.
@@ -76,6 +72,14 @@ class Chrome(Browser):
         Returns:
             webdriver.Chrome: The initialized Chrome driver object.
         """
+        # driver = webdriver.Chrome(
+        #             service=Service(ChromeDriverManager().install()),
+        #             options=self.options)
+        driver = start_chrome(url=None, headless=self.headless, maximize=False, options=self.options)
+        return driver # type: ignore
+    
+    @property
+    def options(self) -> webdriver.ChromeOptions:
         options = webdriver.ChromeOptions()
         options.add_argument('--disable-gpu')
         if self.headless:
@@ -90,12 +94,8 @@ class Chrome(Browser):
             options.add_argument('--user-data-dir=' + self.chrome_userdata_path)
         
         options = _ram_optimization_browser_options(options)
-
-        driver = webdriver.Chrome(
-                    service=Service(ChromeDriverManager().install()),
-                    options=options)
-        return driver
         
+        return options
 
 def _ram_optimization_browser_options(options: Options) -> Options:
     options.add_argument("disable-infobars")
