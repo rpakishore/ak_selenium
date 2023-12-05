@@ -1,5 +1,5 @@
 """Selenium package with requests integration and anti-bot detection measures"""
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 from ak_selenium.browser import RequestsSession
 from selenium.webdriver.common.by import By
