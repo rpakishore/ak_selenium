@@ -9,16 +9,20 @@ import os
 from pathlib import Path
 import sys
 
-from ak_selenium.browser import Browser
+from ak_selenium.browser import Browser, latest_useragent
 
 #Disable webdriver-manager logs per https://github.com/SergeyPirogov/webdriver_manager#wdm_log
 os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Chrome(Browser):
-    USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+    USERAGENT: str = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
 
     def __init__(self, headless:bool = False, 
         chrome_userdata_path:str|None=None, half_screen:bool=True) -> None:
+        
+        _useragent: str = latest_useragent('Chrome')
+        if _useragent != '':
+            self.USERAGENT = _useragent
         
         self.headless = headless
         self._set_userdata_path(datapath=chrome_userdata_path)

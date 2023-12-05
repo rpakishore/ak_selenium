@@ -1,5 +1,6 @@
 from ak_requests import RequestsSession
 from bs4 import BeautifulSoup
+import requests
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -121,3 +122,14 @@ class Browser:
     def soup(self) -> BeautifulSoup:
         """Returns soup object of current page"""
         return BeautifulSoup(self.driver.page_source, 'html.parser')
+    
+def latest_useragent(browser: str) -> str:
+    """Returns the latest useragent for the specified browser"""
+    try:
+        useragents: list[str] = requests.get('https://jnrbsn.github.io/user-agents/user-agents.json').json()
+        for useragent in useragents:
+            if browser.casefold() in useragent.casefold():
+                return useragent
+    except Exception as e:
+        print(str(e))
+    return ''
