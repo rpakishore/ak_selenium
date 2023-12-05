@@ -18,7 +18,6 @@ os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Browser:
     MAX_WAIT_TIME = 5
-    IMPLICITLY_WAIT_TIME = 3
     MAX_WAIT_TIME = 5
     EXCEPTIONS = exceptions
     
