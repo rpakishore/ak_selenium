@@ -1,7 +1,6 @@
 import pytest
 from ak_selenium import Chrome
 
-
 @pytest.fixture(scope="module")
 def chrome_instance():
     chrome = Chrome(headless=True)
