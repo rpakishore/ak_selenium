@@ -5,7 +5,7 @@ from ak_selenium import Chrome
 def chrome_instance():
     chrome = Chrome(headless=True)
     yield chrome
-    del chrome
+    chrome.driver.quit()
 
 def test_implicitly_wait_time(chrome_instance):
     assert chrome_instance.IMPLICITLY_WAIT_TIME == 3
