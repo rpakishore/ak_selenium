@@ -1,10 +1,11 @@
 from ak_requests import RequestsSession
 from bs4 import BeautifulSoup
+from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.remote.webelement import WebElement
 
 from functools import cached_property
 import logging
@@ -16,6 +17,9 @@ os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Browser:
     MAX_WAIT_TIME = 5
+    IMPLICITLY_WAIT_TIME = 3
+    MAX_WAIT_TIME = 5
+    EXCEPTIONS = exceptions
     
     def __init__(self, driver) -> None:
         self.driver = driver

@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common import exceptions
+
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -15,12 +15,7 @@ from ak_selenium.browser import Browser
 os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Chrome(Browser):
-    USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
-                Chrome/83.0.4103.53 Safari/537.36'
-    IMPLICITLY_WAIT_TIME = 3
-    MAX_WAIT_TIME = 5
-    EXCEPTIONS = exceptions
+    USERAGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
 
     def __init__(self, headless:bool = False, 
         chrome_userdata_path:str|None=None, half_screen:bool=True) -> None:
