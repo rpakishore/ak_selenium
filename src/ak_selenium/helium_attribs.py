@@ -31,7 +31,8 @@ class MouseActions:
         self.release_mouse_over = helium.release_mouse_over
         self.rightclick = helium.rightclick
     
-    def scroll(self, direction: Literal['up', 'down', 'left', 'right'] = 'down', num_pixels: int = 100):
+    @staticmethod
+    def scroll(direction: Literal['up', 'down', 'left', 'right'] = 'down', num_pixels: int = 100):
         """Scrolls in the specified direction, for the given number of pixels"""
         match direction.casefold().strip():
             case 'up':
@@ -58,7 +59,7 @@ class HeliumActions:
         self.drag_file = helium.drag_file
         self.combobox_select = helium.select
         self.hover = helium.hover
-        self.Mouse = MouseActions
+        self.Mouse = MouseActions()
         self.write = helium.write
 
     def __str__(self) -> str:
@@ -68,4 +69,4 @@ class HeliumActions:
         return self.__str__()
     
 Element = HeliumElements()
-Actions = HeliumActions()
+Action = HeliumActions()
