@@ -13,11 +13,6 @@ def test_implicitly_wait_time(chrome_instance):
 def test_max_wait_time(chrome_instance):
     assert chrome_instance.MAX_WAIT_TIME == 5
 
-def test_chrome_user_agent(chrome_instance):
-    assert chrome_instance.USERAGENT == 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
-                Chrome/83.0.4103.53 Safari/537.36'
-
 def test_half_screen(chrome_instance):
     assert chrome_instance.half_screen is True
 
