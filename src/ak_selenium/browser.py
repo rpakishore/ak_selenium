@@ -149,6 +149,8 @@ class Browser:
     def get(self, url: str) -> None:
         """Navigate to webpage"""
         try:
+            if '://' not in url:
+                url = 'https://' + url
             self.driver.get(url)
             WebDriverWait(self.driver, timeout=self.MAX_WAIT_TIME, poll_frequency=0.5)
         except Exception as e:
