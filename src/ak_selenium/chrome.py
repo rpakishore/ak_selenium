@@ -16,7 +16,6 @@ os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Chrome(Browser):
     USERAGENT: str = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
-    IMPLICITLY_WAIT_TIME: float = 3
 
     def __init__(self, headless:bool = False, 
         chrome_userdata_path:str|None=None, half_screen:bool=True) -> None:
@@ -31,6 +30,10 @@ class Chrome(Browser):
                 
         self.driver = self._driver()
         super().__init__(driver=self.driver)
+        self._prep_driver(useragent=self.USERAGENT)
+        
+        if half_screen:
+            self.halfscreen()
         return None
     
     def _set_userdata_path(self, datapath: str | None) -> str | None:
@@ -89,28 +92,8 @@ class Chrome(Browser):
         options = _ram_optimization_browser_options(options)
 
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=options)
-        driver.implicitly_wait(self.IMPLICITLY_WAIT_TIME) 
-        driver.execute_script('window.focus()')
-        driver.execute_cdp_cmd('Network.setUserAgentOverride',
-                                {"userAgent": self.USERAGENT})
-        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument",
-        {
-            "source": """
-            Object.defineProperty(navigator, 'webdriver', {
-                get: () => undefined
-                })
-                """})
-        driver.execute_cdp_cmd("Network.enable", {})
-        driver.execute_cdp_cmd("Network.setExtraHTTPHeaders",
-                                {"headers": {"User-Agent": "browser1"}})
-
-        if self.half_screen:
-            size = driver.get_window_size()
-            driver.set_window_size(size['width']/2, size['height'])
-            driver.set_window_position(size['width']/2-13, 0)
-            
+                    service=Service(ChromeDriverManager().install()),
+                    options=options)
         return driver
         
 

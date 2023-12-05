@@ -17,8 +17,8 @@ from typing import Literal
 os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Browser:
-    MAX_WAIT_TIME = 5
-    MAX_WAIT_TIME = 5
+    MAX_WAIT_TIME: float = 5
+    IMPLICITLY_WAIT_TIME: float = 3
     EXCEPTIONS = exceptions
     
     def __init__(self, driver) -> None:
@@ -121,6 +121,30 @@ class Browser:
     def soup(self) -> BeautifulSoup:
         """Returns soup object of current page"""
         return BeautifulSoup(self.driver.page_source, 'html.parser')
+    
+    def halfscreen(self) -> None:
+        """Set browser to half screen width"""
+        driver = self.driver
+        size = driver.get_window_size()
+        driver.set_window_size(size['width']/2, size['height'])
+        driver.set_window_position(size['width']/2-13, 0)
+        
+    def _prep_driver(self, useragent: str) -> None:
+        driver = self.driver
+        driver.implicitly_wait(self.IMPLICITLY_WAIT_TIME) 
+        driver.execute_script('window.focus()')
+        driver.execute_cdp_cmd('Network.setUserAgentOverride',
+                                {"userAgent": useragent})
+        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument",
+        {
+            "source": """
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+                })
+                """})
+        driver.execute_cdp_cmd("Network.enable", {})
+        driver.execute_cdp_cmd("Network.setExtraHTTPHeaders",
+                                {"headers": {"User-Agent": useragent}})
     
 def latest_useragent(browser: str) -> str:
     """Returns the latest useragent for the specified browser"""
