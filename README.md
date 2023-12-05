@@ -86,7 +86,7 @@ flit install --pth-file
 from ak_selenium import Chrome, By, Keys
 
 # Create a new Chrome browser instance
-browser = Chrome(headless=True)
+chrome = Chrome(headless=True)
 
 #Get Chromedriver
 driver = chrome.driver
@@ -100,8 +100,8 @@ locator = (By.TAG_NAME, "h1")
 chrome.Wait_for_locator(locator)
 
 # Fill a form
-element = browser.driver.find_element_by_id("my-form")
-browser.fill_userinput_form(element, "Hello, world!")
+element = chrome.driver.find_element_by_id("my-form")
+chrome.fill_userinput_form(element, "Hello, world!")
 
 # Pass selenium session to requests
 s = chrome.session
