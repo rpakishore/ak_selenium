@@ -11,7 +11,7 @@ def test_implicitly_wait_time(chrome_instance):
     assert chrome_instance.IMPLICITLY_WAIT_TIME == 3
 
 def test_max_wait_time(chrome_instance):
-    assert chrome_instance.MAX_WAIT_TIME == 5
+    assert chrome_instance.MAX_WAIT_TIME == 10
 
 def test_half_screen(chrome_instance):
     assert chrome_instance.half_screen is True
