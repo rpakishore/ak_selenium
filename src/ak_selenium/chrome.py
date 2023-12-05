@@ -16,6 +16,7 @@ os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Chrome(Browser):
     USERAGENT: str = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+    IMPLICITLY_WAIT_TIME: float = 3
 
     def __init__(self, headless:bool = False, 
         chrome_userdata_path:str|None=None, half_screen:bool=True) -> None:
@@ -25,9 +26,9 @@ class Chrome(Browser):
             self.USERAGENT = _useragent
         
         self.headless = headless
-        self._set_userdata_path(datapath=chrome_userdata_path)
         self.half_screen = half_screen
-        
+        self.chrome_userdata_path = chrome_userdata_path
+                
         self.driver = self._driver()
         super().__init__(driver=self.driver)
         return None
@@ -79,22 +80,21 @@ class Chrome(Browser):
             options.add_argument("--window-size=1920,1080")
         options.add_argument("start-maximized")
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        options.add_experimental_option('useAutomationExtension', False)
+        
+        self.chrome_userdata_path = userdata_path(folderpath=self.chrome_userdata_path)
         if self.chrome_userdata_path:
             options.add_argument('--user-data-dir=' + self.chrome_userdata_path)
-        options.add_experimental_option('useAutomationExtension', False)
-    
-        options = self._ram_optimization_browser_options(options)
+        
+        options = _ram_optimization_browser_options(options)
 
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=options)
-
         driver.implicitly_wait(self.IMPLICITLY_WAIT_TIME) 
-
         driver.execute_script('window.focus()')
         driver.execute_cdp_cmd('Network.setUserAgentOverride',
                                 {"userAgent": self.USERAGENT})
-
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument",
         {
             "source": """
@@ -102,7 +102,6 @@ class Chrome(Browser):
                 get: () => undefined
                 })
                 """})
-
         driver.execute_cdp_cmd("Network.enable", {})
         driver.execute_cdp_cmd("Network.setExtraHTTPHeaders",
                                 {"headers": {"User-Agent": "browser1"}})
@@ -114,19 +113,29 @@ class Chrome(Browser):
             
         return driver
         
-    @staticmethod
-    def _ram_optimization_browser_options(options: Options) -> Options:
-        options.add_argument("disable-infobars")
-        options.add_experimental_option("excludeSwitches", 
-                                        ['enable-automation', "enable-logging"])
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-application-cache")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--lang=en-US")
-        
-        # Based on https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or
-        options.add_argument("--allow-running-insecure-content")
-        options.add_argument("--disable-web-security")
-        return options
+
+def _ram_optimization_browser_options(options: Options) -> Options:
+    options.add_argument("disable-infobars")
+    options.add_experimental_option("excludeSwitches", 
+                                    ['enable-automation', "enable-logging"])
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-application-cache")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--lang=en-US")
+    
+    # Based on https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or
+    options.add_argument("--allow-running-insecure-content")
+    options.add_argument("--disable-web-security")
+    return options
+
+def userdata_path(folderpath: str|None) -> str|None:
+    """Chrome Userdata Path"""
+    if folderpath:
+        return folderpath
+    elif sys.platform=="win32":
+        _chrome_userdata_path: Path = Path.home() / 'AppData' / 'Local' / 'Google' / 'Chrome' / 'User Data'
+        if _chrome_userdata_path.exists():
+            return str(_chrome_userdata_path)
+    return None
