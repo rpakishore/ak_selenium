@@ -17,7 +17,7 @@ from typing import Literal
 os.environ['WDM_LOG'] = str(logging.NOTSET)
 
 class Browser:
-    MAX_WAIT_TIME: float = 5
+    MAX_WAIT_TIME: float = 10
     IMPLICITLY_WAIT_TIME: float = 3
     EXCEPTIONS = exceptions
     
@@ -145,7 +145,15 @@ class Browser:
         driver.execute_cdp_cmd("Network.enable", {})
         driver.execute_cdp_cmd("Network.setExtraHTTPHeaders",
                                 {"headers": {"User-Agent": useragent}})
-    
+        
+    def get(self, url: str) -> None:
+        """Navigate to webpage"""
+        try:
+            self.driver.get(url)
+            WebDriverWait(self.driver, timeout=self.MAX_WAIT_TIME, poll_frequency=0.5)
+        except Exception as e:
+            print(str(e))
+
 def latest_useragent(browser: str) -> str:
     """Returns the latest useragent for the specified browser"""
     try:
