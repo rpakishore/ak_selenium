@@ -56,14 +56,14 @@ class Browser:
         return None
     
     @cached_property
-    def base_session(self) -> RequestsSession:
+    def __base_session(self) -> RequestsSession:
         _s = RequestsSession(log=False, retries=5)
         return _s
     
     @property
     def session(self) -> RequestsSession:
         driver = self.driver
-        s = self.base_session
+        s = self.__base_session
         s.update_cookies(driver.get_cookies())
         s.update_header({
         "Accept-Language": driver.execute_script("return window.navigator.language;"),
