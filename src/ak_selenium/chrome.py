@@ -3,11 +3,12 @@ import os
 import sys
 from pathlib import Path
 
+from ak_requests.utils import latest_useragent
 from helium import start_chrome
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from ak_selenium.browser import Browser, latest_useragent
+from ak_selenium.browser import Browser
 
 # Disable webdriver-manager logs per https://github.com/SergeyPirogov/webdriver_manager#wdm_log
 os.environ["WDM_LOG"] = str(logging.NOTSET)

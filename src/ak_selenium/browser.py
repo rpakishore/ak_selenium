@@ -3,7 +3,6 @@ import os
 from functools import cached_property
 from typing import Literal
 
-import requests
 from ak_requests import RequestsSession
 from bs4 import BeautifulSoup
 from selenium.common import exceptions
@@ -178,17 +177,3 @@ class Browser:
             WebDriverWait(self.driver, timeout=self.MAX_WAIT_TIME, poll_frequency=0.5)
         except Exception as e:
             print(str(e))
-
-
-def latest_useragent(browser: str) -> str:
-    """Returns the latest useragent for the specified browser"""
-    try:
-        useragents: list[str] = requests.get(
-            "https://jnrbsn.github.io/user-agents/user-agents.json"
-        ).json()
-        for useragent in useragents:
-            if browser.casefold() in useragent.casefold():
-                return useragent
-    except Exception as e:
-        print(str(e))
-    return ""

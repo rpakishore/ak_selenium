@@ -1,10 +1,11 @@
 import logging
 import os
 
+from ak_requests.utils import latest_useragent
 from helium import start_firefox
 from selenium import webdriver
 
-from ak_selenium.browser import Browser, latest_useragent
+from ak_selenium.browser import Browser
 
 # Disable webdriver-manager logs per https://github.com/SergeyPirogov/webdriver_manager#wdm_log
 os.environ["WDM_LOG"] = str(logging.NOTSET)
