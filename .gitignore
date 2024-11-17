@@ -133,3 +133,4 @@ nosync*
 *.pkl
 .pypirc
 development.ipynb
+uv.lock
