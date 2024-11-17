@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-import undetected_chromedriver as uc
 from ak_requests.utils import latest_useragent
 from helium import start_chrome
 from selenium import webdriver
@@ -83,7 +82,9 @@ class Chrome(Browser):
         # driver = webdriver.Chrome(
         #             service=Service(ChromeDriverManager().install()),
         #             options=self.options)
-        driver = uc.Chrome(options=self.options, headless=self.headless)
+        driver = start_chrome(
+            url=None, headless=self.headless, maximize=False, options=self.options
+        )
         return driver  # type: ignore
 
     @property
@@ -94,8 +95,8 @@ class Chrome(Browser):
             options.add_argument("--headless")
             options.add_argument("--window-size=1920,1080")
         options.add_argument("start-maximized")
-        # options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        # options.add_experimental_option("useAutomationExtension", False)
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        options.add_experimental_option("useAutomationExtension", False)
 
         self.chrome_userdata_path = userdata_path(folderpath=self.chrome_userdata_path)
         if self.chrome_userdata_path:
@@ -108,9 +109,9 @@ class Chrome(Browser):
 
 def _ram_optimization_browser_options(options: Options) -> Options:
     options.add_argument("disable-infobars")
-    # options.add_experimental_option(
-    #     "excludeSwitches", ["enable-automation", "enable-logging"]
-    # )
+    options.add_experimental_option(
+        "excludeSwitches", ["enable-automation", "enable-logging"]
+    )
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-application-cache")

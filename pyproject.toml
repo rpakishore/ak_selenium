@@ -13,8 +13,6 @@ requires-python = ">=3.11.0"
 dependencies=[
     "ak_requests@git+https://github.com/rpakishore/ak_requests",
     "helium >= 5.1.0",
-    "undetected-chromedriver",
-    "setuptools",
     ]
 
 [project.optional-dependencies]
