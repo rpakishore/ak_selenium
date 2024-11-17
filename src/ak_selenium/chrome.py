@@ -79,9 +79,6 @@ class Chrome(Browser):
         Returns:
             webdriver.Chrome: The initialized Chrome driver object.
         """
-        # driver = webdriver.Chrome(
-        #             service=Service(ChromeDriverManager().install()),
-        #             options=self.options)
         driver = start_chrome(
             url=None, headless=self.headless, maximize=False, options=self.options
         )
@@ -99,11 +96,15 @@ class Chrome(Browser):
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
         options.add_experimental_option("useAutomationExtension", False)
 
+        options.add_argument("--hide-scrollbars")
+        options.add_argument("--mute-audio")
+        options.add_argument("--disable-popup-blocking")
+
         self.chrome_userdata_path = userdata_path(folderpath=self.chrome_userdata_path)
         if self.chrome_userdata_path:
             options.add_argument("--user-data-dir=" + self.chrome_userdata_path)
 
-        options = _ram_optimization_browser_options(options)
+        options = self.__ram_optimization_browser_options(options)
         options = self.__options_override_javascript_variables(options=options)
         return options
 
@@ -131,23 +132,28 @@ class Chrome(Browser):
         )
         return driver
 
+    @staticmethod
+    def __ram_optimization_browser_options(options: Options) -> Options:
+        options.add_argument("disable-infobars")
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-automation", "enable-logging"]
+        )
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-application-cache")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--lang=en-US")
 
-def _ram_optimization_browser_options(options: Options) -> Options:
-    options.add_argument("disable-infobars")
-    options.add_experimental_option(
-        "excludeSwitches", ["enable-automation", "enable-logging"]
-    )
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-extensions")
-    options.add_argument("--disable-application-cache")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--lang=en-US")
+        # Based on https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or
+        options.add_argument("--allow-running-insecure-content")
+        options.add_argument("--disable-web-security")
 
-    # Based on https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or
-    options.add_argument("--allow-running-insecure-content")
-    options.add_argument("--disable-web-security")
-    return options
+        options.add_argument("--disable-sync")
+        options.add_argument("--disable-3d-apis")
+        options.add_argument("--disk-cache-size=0")
+
+        return options
 
 
 def userdata_path(folderpath: str | None) -> str | None:
