@@ -12,6 +12,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+
 # Disable webdriver-manager logs per https://github.com/SergeyPirogov/webdriver_manager#wdm_log
 os.environ["WDM_LOG"] = str(logging.NOTSET)
 
@@ -87,8 +88,7 @@ class Browser:
     def find_element_by_text(
         elements: list[WebElement], text: str
     ) -> WebElement | None:
-        """
-        Finds a WebElement from a list based on its text content.
+        """Finds a WebElement from a list based on its text content.
 
         Args:
             elements (List[WebElement]): The list of WebElements to search through.
@@ -104,6 +104,7 @@ class Browser:
         return None
 
     def find_button_by_text(self, text: str) -> WebElement | None:
+        print('Depreciation Notice: `Browser.find_button_by_text` depreciated. Use `Element.Button` instead')
         return self.find_element_by_text(
             self.driver.find_elements(By.TAG_NAME, "button"), text
         )
@@ -113,8 +114,7 @@ class Browser:
         direction: Literal["top", "bottom"] = "bottom",
         alternative_method: bool = False,
     ) -> None:
-        """
-        Scroll the webpage to the specified direction.
+        """Scroll the webpage to the specified direction.
         Args:
             direction (Literal["top", "bottom"]): The direction to scroll. Valid
                 values are "top" and "bottom". Defaults to "bottom"
