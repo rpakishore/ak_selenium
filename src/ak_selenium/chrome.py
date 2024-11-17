@@ -85,6 +85,7 @@ class Chrome(Browser):
         driver = start_chrome(
             url=None, headless=self.headless, maximize=False, options=self.options
         )
+        driver = self.__inject_antidetection_script(driver=driver)
         return driver  # type: ignore
 
     @property
@@ -103,8 +104,32 @@ class Chrome(Browser):
             options.add_argument("--user-data-dir=" + self.chrome_userdata_path)
 
         options = _ram_optimization_browser_options(options)
-
+        options = self.__options_override_javascript_variables(options=options)
         return options
+
+    @staticmethod
+    def __options_override_javascript_variables(options: Options):
+        # Override JavaScript Variables: Many websites check navigator.webdriver. Override it to avoid detection:
+        options.add_experimental_option(
+            "prefs", {"profile.managed_default_content_settings.images": 2}
+        )
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--enable-blink-features=ShadowDOMV0")
+        return options
+
+    def __inject_antidetection_script(
+        self, driver: webdriver.Chrome
+    ) -> webdriver.Chrome:
+        # Inject scripts to modify window properties:
+        driver.execute_cdp_cmd(
+            "Page.addScriptToEvaluateOnNewDocument",
+            {
+                "source": """
+                Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+                """
+            },
+        )
+        return driver
 
 
 def _ram_optimization_browser_options(options: Options) -> Options:
