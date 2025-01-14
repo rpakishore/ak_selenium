@@ -24,7 +24,7 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: Generate Docs
-        run: uv run --dev pdoc --docformat google --math --mermaid template_python -o docs
+        run: uv run --dev pdoc --docformat google --math --mermaid ak_selenium -o docs
 
       - uses: actions/upload-pages-artifact@v3
         with:
