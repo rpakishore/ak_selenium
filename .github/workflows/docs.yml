@@ -23,6 +23,9 @@ jobs:
       - name: 📦 Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: 🦾 Install the project
+        run: uv sync --group dev
+
       - name: Generate Docs
         run: uv run --dev pdoc --docformat google --math --mermaid ak_selenium -o docs
 
