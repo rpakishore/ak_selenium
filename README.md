@@ -5,7 +5,7 @@
     Selenium package with requests integration and anti-bot detection measures
   </p>
 <h4>
-    <a href="https://github.com/rpakishore/ak_selenium">Documentation</a>
+    <a href="https://rpakishore.github.io/ak_selenium/ak_selenium.html">Documentation</a>
   <span> · </span>
     <a href="https://github.com/rpakishore/ak_selenium/issues/">Report Bug</a>
   <span> · </span>
