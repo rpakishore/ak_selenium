@@ -28,12 +28,12 @@ def test_useragent(chrome_instance):
 def test_cookies(chrome_instance):
     """Confirm cookies are transferred to requests session"""
     chrome = chrome_instance
-    url = f"https://httpbin.org/cookies/set"
+    url = "https://httpbin.org/cookies/set"
     cookie = ("browser_set", 1)
-    chrome.get(f"https://httpbin.org/cookies/set/{cookie[0]}/{cookie[1]}")
+    chrome.get(f"{url}/{cookie[0]}/{cookie[1]}")
 
     session = chrome.session
-    session.get("https://httpbin.org/cookies/set/requests_set/1")
+    session.get(f"{url}/requests_set/1")
 
     assert session.cookies.items() == [("browser_set", "1"), ("requests_set", "1")]
 

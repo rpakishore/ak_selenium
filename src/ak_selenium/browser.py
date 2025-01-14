@@ -12,7 +12,6 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-
 # Disable webdriver-manager logs per https://github.com/SergeyPirogov/webdriver_manager#wdm_log
 os.environ["WDM_LOG"] = str(logging.NOTSET)
 
