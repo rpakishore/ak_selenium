@@ -25,6 +25,16 @@ class Chrome(Browser):
         chrome_userdata_path: str | None = None,
         half_screen: bool = True,
     ) -> None:
+        """Initialize a chrome instance
+
+        Args:
+            headless (bool, optional): Start in headless mode. Defaults to False.
+            chrome_userdata_path (str | None, optional): existing `userdata` path. Defaults to None.
+            half_screen (bool, optional): split to half-screen width. Defaults to True.
+
+        Returns:
+            None
+        """
 
         _useragent: str = latest_useragent("Chrome")
         if _useragent != "":
@@ -157,7 +167,14 @@ class Chrome(Browser):
 
 
 def userdata_path(folderpath: str | None) -> str | None:
-    """Chrome Userdata Path"""
+    """Get Chrome Userdata Path
+
+    Args:
+        folderpath (str | None): Chrome Userdata Path
+
+    Returns:
+        str | None: Chrome Userdata Path
+    """
     if folderpath:
         return folderpath
     elif sys.platform == "win32":

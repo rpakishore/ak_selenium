@@ -103,7 +103,9 @@ class Browser:
         return None
 
     def find_button_by_text(self, text: str) -> WebElement | None:
-        print('Depreciation Notice: `Browser.find_button_by_text` depreciated. Use `Element.Button` instead')
+        print(
+            "Depreciation Notice: `Browser.find_button_by_text` depreciated. Use `Element.Button` instead"
+        )
         return self.find_element_by_text(
             self.driver.find_elements(By.TAG_NAME, "button"), text
         )
@@ -115,8 +117,7 @@ class Browser:
     ) -> None:
         """Scroll the webpage to the specified direction.
         Args:
-            direction (Literal["top", "bottom"]): The direction to scroll. Valid
-                values are "top" and "bottom". Defaults to "bottom"
+            direction (Literal["top", "bottom"]): The direction to scroll. Valid values are "top" and "bottom". Defaults to "bottom"
             alternative_method (bool): Uses `Keys` to scroll. Defaults to False.
         """
         _el = self.driver.find_element(By.TAG_NAME, "div")
@@ -168,7 +169,12 @@ class Browser:
         )
 
     def get(self, url: str) -> None:
-        """Navigate to webpage"""
+        """Navigate to a webpage
+
+        Args:
+            url (str): Url to navigate to
+        """
+
         try:
             if "://" not in url:
                 url = "https://" + url
