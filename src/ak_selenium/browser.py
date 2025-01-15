@@ -17,12 +17,16 @@ os.environ["WDM_LOG"] = str(logging.NOTSET)
 
 
 class Browser:
+    """General browser class, not to be used directly but to act as a parent class to other specific `Browser` child classess"""
+
     MAX_WAIT_TIME: float = 10
     IMPLICITLY_WAIT_TIME: float = 3
     EXCEPTIONS = exceptions
 
     def __init__(self, driver) -> None:
+
         self.driver = driver
+        """Selenium webdriver"""
 
     def wait_for_locator(self, locator: tuple[str, str]) -> None:
         """
@@ -64,6 +68,11 @@ class Browser:
 
     @property
     def session(self) -> RequestsSession:
+        """Generate and return `ak_requests.RequestsSession` from current browser instance
+
+        Returns:
+            RequestsSession: ak_requests.RequestsSession
+        """
         driver = self.driver
         s = self.__base_session
         s.update_cookies(driver.get_cookies())
@@ -94,7 +103,7 @@ class Browser:
             text (str): The text to match against the elements' text content.
 
         Returns:
-            WebElement or None: The first WebElement that matches the provided text,\
+            WebElement | None: The first WebElement that matches the provided text,\
                 or None if no match is found.
         """
         for element in elements:

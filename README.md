@@ -5,7 +5,7 @@
     Selenium package with requests integration and anti-bot detection measures
   </p>
 <h4>
-    <a href="https://github.com/rpakishore/ak_selenium">Documentation</a>
+    <a href="https://rpakishore.github.io/ak_selenium/">Documentation</a>
   <span> · </span>
     <a href="https://github.com/rpakishore/ak_selenium/issues/">Report Bug</a>
   <span> · </span>
@@ -23,16 +23,12 @@
 
 - [1. About the Project](#1-about-the-project)
   - [1.1. Features](#11-features)
-- [2. Getting Started](#2-getting-started)
-  - [2.1. Installation](#21-installation)
-    - [2.1.1. Production](#211-production)
-    - [2.1.2. Development](#212-development)
+  - [2. Installation](#2-installation)
 - [3. Usage](#3-usage)
   - [3.1. Additional Options](#31-additional-options)
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
 - [6. Contact](#6-contact)
-- [7. Acknowledgements](#7-acknowledgements)
 
 <!-- About the Project -->
 ## 1. About the Project
@@ -51,35 +47,15 @@
 - RAM optimization for browser options.
 - Integrates [Helium](https://github.com/mherrmann/helium) for easier automation
 
-<!-- Getting Started -->
-## 2. Getting Started
 
 <!-- Installation -->
-### 2.1. Installation
+### 2. Installation
 
-#### 2.1.1. Production
-
-Install with flit
+use pip
 
 ```bash
-pip install flit
-flit install --deps production
+pip install ak_selenium@git+https://github.com/rpakishore/ak_selenium
 ```
-
-Alternatively, you can use pip
-
-```bash
-pip install ak_selenium
-```
-
-#### 2.1.2. Development
-
-Install with flit
-
-```bash
-flit install --pth-file
-```
-
 <!-- Usage -->
 ## 3. Usage
 
@@ -173,10 +149,3 @@ See LICENSE for more information.
 Arun Kishore - [@rpakishore](mailto:pypi@rpakishore.co.in)
 
 Project Link: [https://github.com/rpakishore/ak_selenium](https://github.com/rpakishore/ak_selenium)
-
-<!-- Acknowledgments -->
-## 7. Acknowledgements
-
-- [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
-- [Shields.io](https://shields.io/)
-- [Helium](https://github.com/mherrmann/helium)
