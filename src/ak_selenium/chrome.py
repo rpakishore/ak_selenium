@@ -18,6 +18,7 @@ class Chrome(Browser):
     USERAGENT: str = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
     )
+    """default fallback useragent"""
 
     def __init__(
         self,
@@ -97,6 +98,7 @@ class Chrome(Browser):
 
     @property
     def options(self) -> webdriver.ChromeOptions:
+        """Set default `webdriver.ChromeOptions`"""
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-gpu")
         if self.headless:

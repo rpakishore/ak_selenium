@@ -412,5 +412,5 @@ class HeliumActions:
         return self.__str__()
 
 
-Element = HeliumElements()
-Action = HeliumActions()
+Element: HeliumElements = HeliumElements()
+Action: HeliumActions = HeliumActions()
